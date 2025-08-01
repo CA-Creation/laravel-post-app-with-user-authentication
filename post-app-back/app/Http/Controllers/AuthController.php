@@ -13,11 +13,12 @@ class AuthController extends Controller
     return view('auth.register');
 }
 
-public function register(Request $request) {
+public function register(Request $request)
+{
     $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => 'required',
         'email' => 'required|email|unique:users',
-        'password' => 'required|confirmed|min:6',
+        'password' => 'required|min:6|confirmed',
     ]);
 
     $user = User::create([
@@ -26,10 +27,13 @@ public function register(Request $request) {
         'password' => Hash::make($request->password),
     ]);
 
+    event(new Registered($user));
+
     Auth::login($user);
 
-    return redirect('/dashboard');
+    return redirect()->route('dashboard');
 }
+
 
 public function showLogin() {
     return view('auth.login');
