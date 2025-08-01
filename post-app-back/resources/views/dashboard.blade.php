@@ -7,22 +7,45 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            {{-- Success Message --}}
             @if(session('success'))
                 <div class="mb-6 p-4 bg-green-100 text-green-700 rounded">
                     {{ session('success') }}
                 </div>
             @endif
 
+            {{-- Search Form --}}
+            <form action="{{ route('dashboard') }}" method="GET" class="mb-6 flex flex-col md:flex-row gap-4">
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search posts by title..."
+                    value="{{ request('search') }}"
+                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded w-full md:w-1/2"
+                >
+                <button
+                    type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                >
+                    Search
+                </button>
+            </form>
+
+            {{-- Posts List --}}
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Your Posts</h2>
-                    <button onclick="document.getElementById('createPostModal').classList.remove('hidden')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                    <button
+                        onclick="document.getElementById('createPostModal').classList.remove('hidden')"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                    >
                         Create New Post
                     </button>
                 </div>
 
                 @if ($posts->isEmpty())
-                    <p class="text-gray-600 dark:text-gray-400">You have no posts yet.</p>
+                    <p class="text-gray-600 dark:text-gray-400">No posts found{{ request('search') ? ' for your search.' : '.' }}</p>
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($posts as $post)
@@ -30,13 +53,10 @@
                                 @if ($post->image)
                                     <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover rounded mb-4">
                                 @endif
-                                <p class="mt-2 text-gray-700 text-opacity-50 dark:text-gray-300 dark:text-opacity-50">
-                                    Title
-                                </p>
+                                <p class="mt-2 text-gray-700 text-opacity-50 dark:text-gray-300 dark:text-opacity-50">Title</p>
                                 <h3 class="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $post->title }}</h3>
-                                <p class="mt-2 text-gray-700 text-opacity-50 dark:text-gray-300 dark:text-opacity-50">
-                                    content
-                                </p>
+
+                                <p class="mt-2 text-gray-700 text-opacity-50 dark:text-gray-300 dark:text-opacity-50">Content</p>
                                 <p class="mt-1 text-gray-700 dark:text-gray-300 flex-grow">{{ Str::limit($post->content, 150) }}</p>
 
                                 <div class="mt-4 flex space-x-4">
@@ -59,6 +79,7 @@
         </div>
     </div>
 
+    {{-- Create Post Modal --}}
     <div id="createPostModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center hidden z-50">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
             <h2 class="text-lg font-bold mb-4 text-gray-800 dark:text-gray-100">Create New Post</h2>
@@ -97,5 +118,4 @@
             </form>
         </div>
     </div>
-
 </x-app-layout>
