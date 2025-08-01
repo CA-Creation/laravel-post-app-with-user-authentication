@@ -1,7 +1,7 @@
 
 
 
-# Laravel Blog Project with Authentication and Email Verification
+# Laravel Blog Project with Authentication
 
 This is a Laravel web application that includes user registration, login, profile management, and a CRUD posts system.
 
